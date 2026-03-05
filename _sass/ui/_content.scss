@@ -2,6 +2,8 @@
 //  $CONTENT
 //------------------------------------//
 
+@use "../_spaceBase/scss/globals" as *;
+
 .hero {
   position: relative;
   color: $tertiary;

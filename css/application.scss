@@ -5,26 +5,22 @@
 // Any file that has been modified has been copied in to the _sass directory, while
 // all stock spaceBase files are imported from the submodule (_spaceBase).
 
-@import "../_spaceBase/scss/base/functions";
-@import "vars";
-@import "../_spaceBase/scss/vendor/normalize"; $normalize: true;
+@use "../_spaceBase/scss/base/functions";
+@use "../_spaceBase/scss/vendor/normalize";
 
-@import
-// BASE
-  "../_spaceBase/scss/base/mixins",
-  "../_spaceBase/scss/base/grids",
-  "../_spaceBase/scss/base/widths",
-  "../_spaceBase/scss/base/push",
-  "../_spaceBase/scss/base/shared",
-  "../_spaceBase/scss/base/helpers",
-// UI
-  "ui/fonts",
-  "ui/typography",
-  "ui/buttons",
-  "../_spaceBase/scss/ui/forms",
-  "../_spaceBase/scss/ui/island",
-  "../_spaceBase/scss/ui/lists",
-  "ui/layout",
-  "ui/content",
-  "../_spaceBase/scss/ui/print"
-;
+@use "../_spaceBase/scss/base/grids";
+@use "../_spaceBase/scss/base/widths";
+@use "../_spaceBase/scss/base/push";
+@use "../_spaceBase/scss/base/shared";
+@use "../_spaceBase/scss/base/helpers";
+
+@use "ui/fonts";
+@use "ui/typography";
+@use "ui/buttons";
+@use "../_spaceBase/scss/ui/forms";
+@use "../_spaceBase/scss/ui/island";
+@use "../_spaceBase/scss/ui/lists";
+@use "ui/layout";
+@use "ui/content";
+
+@use "../_spaceBase/scss/ui/print";

@@ -1,9 +1,8 @@
 ---
 ---
 
-@import "../_spaceBase/scss/base/functions";
-@import "vars";
-@import "../_spaceBase/scss/base/mixins";
+@use "sass:list";
+@use "../_spaceBase/scss/globals" as *;
 
 .sg {
   text-align: left;
