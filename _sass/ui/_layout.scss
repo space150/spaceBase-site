@@ -2,7 +2,7 @@
 //  $LAYOUT
 //------------------------------------//
 
-@use "../_spaceBase/scss/globals" as *;
+@use "../globals" as *;
 
 body { min-width: $site-min-width; }
 
