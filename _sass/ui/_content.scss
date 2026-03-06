@@ -254,38 +254,6 @@
   }
 }
 
-.created {
-  color: $tertiary;
-  a {
-    display: block;
-    margin: 0.5em 0;
-    text-decoration: none;
-    background: $tertiary;
-    border-radius: 0.5em;
-    img {
-      width: 100%;
-    }
-    span {
-      display: inline-block;
-      padding: 0.8em 0.2em;
-    }
-    &:hover span {
-      text-decoration: underline;
-    }
-  }
-  @include media($from: lap) {
-    a {
-      margin: $base-spacing-unit 0 0;
-      font-size: 0.889rem;
-    }
-  }
-  @include media($from: desk) {
-    a {
-      font-size: 1rem;
-    }
-  }
-}
-
 .credits {
   position: relative;
   color: $white;
@@ -329,11 +297,6 @@
   background: $black;
   p {
     margin-bottom: 1.5em;
-  }
-  @include media($from: lap) {
-    .twitter {
-      width: 90px;
-    }
   }
   @include media($upto: lap) {
     .h-list--centered li {
