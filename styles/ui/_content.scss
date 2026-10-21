@@ -16,7 +16,7 @@
     margin: 0 auto;
     width: 220px;
     height: 60px;
-    background: url('../images/logo.png') no-repeat;
+    background: url('/images/logo.png') no-repeat;
     background-size: 100%;
     @include media($from: lap) {
       width: 275px;
@@ -37,7 +37,7 @@
     right: $half-spacing-unit;
     width: 33px;
     height: 33px;
-    background: url('../images/github.png') no-repeat;
+    background: url('/images/github.png') no-repeat;
     background-size: 100%;
     z-index: 20;
   }
@@ -84,7 +84,7 @@
     .content-over-image {
       position: relative;
       padding-bottom: $half-spacing-unit;
-      background: url('../images/hero.png') no-repeat center bottom;
+      background: url('/images/hero.png') no-repeat center bottom;
       background-size: auto 100%;
     }
     p:not(.shoutout) {

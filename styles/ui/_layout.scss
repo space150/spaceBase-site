@@ -46,7 +46,8 @@ body { min-width: $site-min-width; }
 
 @include media($upto: lap) {
   .neg-margin {
-    @include padding-horizontal(-$gutter);
+    margin-left: -$gutter;
+    margin-right: -$gutter;
   }
 }
 
