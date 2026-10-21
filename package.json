@@ -10,7 +10,7 @@
     "build": "next build",
     "start": "serve out",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "next typegen && tsc --noEmit"
   },
   "dependencies": {
     "next": "16.4.0",
@@ -27,5 +27,8 @@
     "sass": "1.105.1",
     "serve": "14.2.6",
     "typescript": "6.0.3"
+  },
+  "overrides": {
+    "compression": "1.8.2"
   }
 }
