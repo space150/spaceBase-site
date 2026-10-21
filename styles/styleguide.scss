@@ -1,8 +1,5 @@
----
----
-
 @use "sass:list";
-@use "../_spaceBase/scss/globals" as *;
+@use "globals" as *;
 
 .sg {
   text-align: left;
@@ -11,6 +8,10 @@
     ul, ol {
       margin-bottom: 0;
     }
+  }
+  .btn {
+    max-width: 100%;
+    white-space: normal;
   }
 }
 
@@ -60,12 +61,12 @@
   }
 }
 
-@for $i from 1 through length($styleguide-colors) {
+@for $i from 1 through list.length($styleguide-colors) {
   .sg-colors li:nth-of-type(#{$i}) .sg-swatch {
-    background: nth($styleguide-colors, $i);
+    background: list.nth($styleguide-colors, $i);
 
     &:after {
-      content: "#{nth($styleguide-colors, $i)}";
+      content: "#{list.nth($styleguide-colors, $i)}";
     }
   }
 }
