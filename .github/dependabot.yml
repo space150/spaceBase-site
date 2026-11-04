@@ -1,0 +1,15 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 0 # This sets the bot to security updates only (any non-security updates are ignored)
+    assignees:
+      - "spacestierman"
+      - "cstoobes"
+    groups:
+      security:
+        applies-to: security-updates
+        patterns:
+          - "*"
