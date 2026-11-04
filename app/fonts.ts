@@ -1,8 +1,6 @@
-//------------------------------------//
-//  $FONTS
-//------------------------------------//
-
-@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro);
+import { Source_Sans_3 } from "next/font/google"
+import localFont from "next/font/local"
+import type { NextFontWithVariable } from "next/dist/compiled/@next/font"
 
 /**
  * @license
@@ -26,24 +24,21 @@
  * Webfonts copyright: &#x00A9; 2012 by Sergiy S. Tkachenko / 4th february (info@4thfebruary.com.ua).&#x000D;&#x000A;All rights reserved. This font software is the property of Sergiy S. Tkachenko (Kremenchuk, Ukraine). You may not reproduce, modify, adapt, translate, alter nor
  *
  * © 2014 MyFonts Inc
-*/
+ */
 
-@import url("//hello.myfonts.net/count/2bf776");
+export const fontatica: NextFontWithVariable = localFont({
+  src: [
+    { path: "./fonts/fontatica-4f-regular.woff", weight: "400", style: "normal" },
+    { path: "./fonts/fontatica-4f-italic.woff", weight: "400", style: "italic" },
+  ],
+  variable: "--font-head",
+  display: "swap",
+})
 
-@font-face {
-  font-family: 'Fontatica4F';
-  src: url('../fonts/2BF776_1_0.woff') format('woff'),
-      url('../fonts/2BF776_1_0.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
+export const sourceSans: NextFontWithVariable = Source_Sans_3({
+  subsets: ["latin"],
+  variable: "--font-body",
+  display: "swap",
+})
 
-@font-face {
-  font-family: 'Fontatica4F';
-  src: url('../fonts/2BF776_0_0.woff') format('woff'),
-      url('../fonts/2BF776_0_0.ttf') format('truetype');
-  font-weight: normal;
-  font-style: italic;
-  font-display: swap;
-}
+export const myFontsCounterUrl: string = "https://hello.myfonts.net/count/2bf776"

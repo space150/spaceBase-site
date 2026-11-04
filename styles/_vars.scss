@@ -73,5 +73,5 @@ $state-success:  #468847;
 $state-error:    #b94a48;
 
 // Fonts
-$font-body:    "Source Sans Pro", Arial, Helvetica, sans-serif;
-$font-head:    "Fontatica4F", Arial, Helvetica, sans-serif;
+$font-body:    var(--font-body), Arial, Helvetica, sans-serif;
+$font-head:    var(--font-head), Arial, Helvetica, sans-serif;

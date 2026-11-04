@@ -1,12 +1,7 @@
-# never commit compiled code
-javascripts/compiled/*
-stylesheets/*
-
-/_site
-
-# Temporary Sass files
-.sass-cache/
-
-.jekyll-cache/
+/node_modules
+/.next
+/out
+next-env.d.ts
+*.tsbuildinfo
 
 *.DS_Store
