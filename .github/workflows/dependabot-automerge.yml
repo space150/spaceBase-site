@@ -1,28 +1,75 @@
 name: Dependabot security auto-merge
 
-on: pull_request
+on:
+  pull_request:
+    types: [opened, synchronize]
 
 permissions:
   contents: read
+
+env:
+  SECURITY_CONTACTS: spacestierman cstoobes
 
 concurrency:
   group: dependabot-automerge-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
+  triage:
+    name: Triage
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      critical: ${{ steps.compare.outputs.critical }}
+    steps:
+      - name: Check out the pull request
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: head
+
+      - name: Check out the base branch
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: base
+
+      - name: Set up Node from package.json engines
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: head/package.json
+
+      - name: Compare critical vulnerabilities
+        id: compare
+        run: |
+          count() {
+            (cd "$1" && npm audit --package-lock-only --json > audit.json) || true
+            jq -e '.metadata.vulnerabilities.critical' "$1/audit.json"
+          }
+          base=$(count base)
+          head=$(count head)
+          echo "Critical vulnerabilities: $base on the base branch, $head on the pull request"
+          if [ "$head" -lt "$base" ]; then
+            echo "critical=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "critical=false" >> "$GITHUB_OUTPUT"
+          fi
+
   verify:
     name: Verify
-    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    needs: triage
+    if: needs.triage.outputs.critical == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - name: Check out the pull request
         uses: actions/checkout@v7
 
-      - name: Set up Node from .nvmrc
+      - name: Set up Node from package.json engines
         uses: actions/setup-node@v7
         with:
-          node-version-file: .nvmrc
+          node-version-file: package.json
           cache: npm
 
       - name: Install from the lockfile
@@ -47,12 +94,7 @@ jobs:
       contents: write
       pull-requests: write
     steps:
-      - name: Read Dependabot metadata
-        id: metadata
-        uses: dependabot/fetch-metadata@v3
-
-      - name: Merge the security update
-        if: steps.metadata.outputs.dependency-group == 'security'
+      - name: Merge the critical security update
         run: gh pr merge "$PR_URL" --merge --match-head-commit "$HEAD_SHA"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -61,8 +103,48 @@ jobs:
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
 
       - name: Deploy the merged update
-        if: steps.metadata.outputs.dependency-group == 'security'
         run: gh workflow run deploy.yml --ref main
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
+
+  alert:
+    name: Alert
+    needs: [triage, verify, merge]
+    if: always() && (needs.triage.result == 'failure' || (needs.triage.outputs.critical == 'true' && (needs.verify.result == 'failure' || needs.merge.result == 'failure')))
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Tag the security contacts
+        run: |
+          mentions=$(printf '@%s ' $SECURITY_CONTACTS)
+          if [ "$TRIAGE_RESULT" = "failure" ]; then
+            reason="could not be triaged, so it is unknown whether it fixes a critical vulnerability"
+          else
+            reason="fixes a critical vulnerability but failed to merge"
+          fi
+          gh pr comment "$PR_URL" --body "${mentions}this Dependabot security update $reason. It has been left open for you to fix and merge by hand. Workflow run: $RUN_URL"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          TRIAGE_RESULT: ${{ needs.triage.result }}
+
+  close:
+    name: Close
+    needs: triage
+    if: needs.triage.outputs.critical == 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Close the non-critical update
+        run: gh pr close "$PR_URL" --comment "Closed automatically because this update fixes no critical vulnerability. Only critical security updates are patched by Dependabot. Reopen this pull request to merge it by hand."
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
